@@ -58,8 +58,8 @@ gulp.task('bundle:css', function(cb) {
         }).on('error',  function (err) {
           gutil.log(err.message)
         }))
-        .pipe(gap.prependText(variablesInclude))
         .pipe(concat(name))
+        .pipe(gap.prependText(variablesInclude))
         .pipe(gulp.dest(paths.theme.media))
     })
     cb();
