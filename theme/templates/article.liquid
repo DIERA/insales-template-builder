@@ -9,11 +9,10 @@
           {{ article.content | editable }}
         </div>
 
-        {% if article.related_products.size > 0 %}
-        <div class="article-products">
-          {% include "products_slider", products_title: 'Товары по теме', products_array: article.related_products %}
-        </div>
-        {% endif %}
+        {% for product in article.related_products %}
+          {% assign hide_product = false %}
+          {% include "products_slider", products_title: 'Товары к статье:', products_prefix: 'is-related', card_prefix: 'in-product', hide_product: hide_product  %}
+        {% endfor %}
     </div>
 
     <div class="blog-right-column cell-3 cell-12-mc">
