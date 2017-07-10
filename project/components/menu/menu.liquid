@@ -1,3 +1,7 @@
+{% assign anchor = '' %}
+{% assign target = '' %}
+{% assign container = '' %}
+
 {% unless level_limit %}
   {% assign level_limit = 100 %}
 {% endunless %}
@@ -29,7 +33,12 @@
             </li>
           {% endfor %}
         {% endif %}
-        <li class="{{ menu_class }}-item menu-item level-{{ node_level }} {{ current }}">
+        {% if data_tabs and show_next_level %}
+          {% assign container = 'data-tabs-container' %}
+          {% else %}
+          {% assign container = '' %}
+        {% endif %}
+        <li class="{{ menu_class }}-item menu-item level-{{ node_level }} {{ current }}" {{ container }}>
           {% if show_icon %}
             <span class="{{ menu_class }}-icon menu-icon level-{{ node_level }}"></span>
           {% endif %}
@@ -37,12 +46,19 @@
             {{ link.title }}
           </a>
           {% if show_next_level %}
-            <button class="{{ menu_class }}-marker menu-marker menu-marker level-{{ node_level }}" type="bttn"></button>
-            <ul class="{{ menu_class }} menu level-{{ node_level | plus: 1 }}">
+            {% if data_tabs %}
+              {% assign anchor = 'data-tab-anchor="' | append: link.handle | append: '"' %}
+              {% assign target = 'data-tab-target="' | append: link.handle | append: '"' %}
+              {% else %}
+              {% assign anchor = '' %}
+              {% assign target = '' %}
+            {% endif %}
+            <button class="{{ menu_class }}-marker menu-marker menu-marker level-{{ node_level }} {% if link.current? %}is-button-active{% endif %}" type="button" {{ anchor }} {% if link.current? %}data-tab-active{% endif %}></button>
+            <ul class="{{ menu_class }} menu level-{{ node_level | plus: 1 }}" {{ target }}>
             {% else %}
             </li>
           {% endif %}
-        
+
         {% assign prev_link_level = node_level %}
         {% if forloop.last %}
           {% assign prev_link_level = node_level | minus: 1 %}
@@ -76,3 +92,6 @@
 {% assign source_type = null %}
 {% assign show_icon = null %}
 {% assign level_limit = null %}
+{% assign anchor = null %}
+{% assign target = null %}
+{% assign container = null %}

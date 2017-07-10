@@ -1,0 +1,13 @@
+.category_menu .category_menu {
+  display: none;
+}
+.is-button-active + .category_menu {
+  display: block;
+}
+.category_menu-marker::after {
+  content: '+';
+  font-size: 20px;
+}
+.category_menu-marker.is-button-active::after {
+  content: '-';
+}

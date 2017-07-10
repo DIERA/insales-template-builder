@@ -8,4 +8,4 @@
 #= require ion.rangeSlider.min
 #= require plugin.ionRange.adapter
 #= require swiper.min
-#= require plugin.tabs
+#= require dataTabs
