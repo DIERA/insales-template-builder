@@ -58,7 +58,8 @@ button {
   @include bttn-link;
 }
 
-.bttn-prim {
+.bttn-prim,
+.m-modal-button--checkout {
   @include bttn;
   @include bttn-link;
   background-color: $color-link-primary;
@@ -161,6 +162,10 @@ img {
     padding-top: 100%;
   }
 
+  &.is-rectangle {
+    padding-top: 150%;
+  }
+
   &.is-rounded {
     padding-top: 100%;
     overflow: hidden;
@@ -187,6 +192,8 @@ img {
       @supports ((-o-object-fit: cover) or (object-fit: cover)) {
         -o-object-fit: cover;
         object-fit: cover;
+        -o-object-position: 0 0;
+        object-position: 0 0;
         width: 100%;
       }
     }
