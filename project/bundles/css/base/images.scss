@@ -21,6 +21,10 @@ img {
     padding-top: 100%;
   }
 
+  &.is-rectangle {
+    padding-top: 150%;
+  }
+
   &.is-rounded {
     padding-top: 100%;
     overflow: hidden;
@@ -45,6 +49,7 @@ img {
 
       @supports(object-fit: cover) {
         object-fit: cover;
+        object-position: 0 0;
         width: 100%;
       }
     }
