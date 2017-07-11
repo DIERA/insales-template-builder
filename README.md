@@ -72,3 +72,13 @@ npm i
 >**сниппеты**
 
 >Liquid файлы лежат в корневой папке компонента
+
+
+## Полезные ссылки
+
+- [Отправка сообщений](https://github.com/VladimirIvanin/InSalesFeedback)
+- [Плагин для обновления информации товара](https://github.com/VladimirIvanin/variantsModifier)
+- [Избранное](https://github.com/VladimirIvanin/favorites)
+- [Ранее просмотренные товары](https://github.com/VladimirIvanin/RecentlyView)
+- [Определение местоположения пользователя](https://github.com/VladimirIvanin/geoManager)
+- [Табы на jQuery](https://github.com/VladimirIvanin/dataTabs)
