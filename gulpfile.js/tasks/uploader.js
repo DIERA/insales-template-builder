@@ -53,3 +53,12 @@ gulp.task('uploader:upload', function () {
     }
   }, 1000)
 })
+
+
+gulp.task('uploader:stop', function () {
+  if (uploader.use) {
+    InsalesUp.stopStream()
+  }else{
+    console.log('uploader.use = false');
+  }
+})
