@@ -5,7 +5,6 @@ var settings = require('../config/settings.json');
 function imageStream(stream) {
   return stream
     .pipe(gulpif(settings.imageMin, image()))
-    .pipe(stream.resume())
 }
 
 module.exports = imageStream;

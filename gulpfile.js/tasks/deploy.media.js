@@ -20,6 +20,7 @@ gulp.task('deploy:media', function (cb) {
       .pipe(rename(function (_path) {
         _path.dirname = "";
       }))
+      .pipe(imageStream())
       .pipe(gulp.dest(paths.theme.media))
       .on('end', function() {
         resolve();
