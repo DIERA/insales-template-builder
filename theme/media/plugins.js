@@ -1,5 +1,5 @@
-#= require jquery.cookie
 #= require plugin.collapse
+#= require jquery.cookie
 #= require plugin.validateForm
 #= require feedback
 #= require variantsModifier

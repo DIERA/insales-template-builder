@@ -1,19 +1,24 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var fs = require('fs');
-var autoprefixer = require('gulp-autoprefixer');
-var postcss = require('gulp-postcss');
-var syntax = require('postcss-scss');
+
 var _ = require('lodash');
 var watch = require('gulp-watch');
 var path = require('path');
-var sass = require('gulp-sass');
+
 var paths = require('../config/paths.json');
 var settings = require('../config/settings.json');
 var gap = require('gulp-append-prepend');
 var contents = require('../help/contents.js');
 var rename = require("gulp-rename");
-var gutil = require('gulp-util');
+
+
+// кастомный чейнинг gulp плагинов
+var scssPipeline = require('../pipelines/scss.js');
+var chain = require('gulp-chain');
+var scssStream = chain(function(stream) {
+	return scssPipeline(stream);
+});
 
 gulp.task('variables:scss', function(cb) {
   var variablesScss = [];
@@ -33,13 +38,6 @@ gulp.task('variables:scss', function(cb) {
 
 gulp.task('bundle:css', function(cb) {
 
-  var plugins = [
-      autoprefixer({
-          browsers: ['last 20 versions'],
-          cascade: false
-      }),
-  ];
-
   var variablesInclude = '';
 
   fs.readdir(paths.bundles.css, function(err, list) {
@@ -52,12 +50,7 @@ gulp.task('bundle:css', function(cb) {
       }
 
       gulp.src(_path)
-        .pipe(postcss({
-          plugins: plugins,
-          options: { syntax: syntax }
-        }).on('error',  function (err) {
-          gutil.log(err.message)
-        }))
+        .pipe(scssStream())
         .pipe(concat(name))
         .pipe(gap.prependText(variablesInclude))
         .pipe(gulp.dest(paths.theme.media))

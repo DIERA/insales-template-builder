@@ -1,9 +1,6 @@
 var gulp = require('gulp');
 var fs = require('fs');
 var path = require('path');
-var autoprefixer = require('gulp-autoprefixer');
-var postcss = require('gulp-postcss');
-var syntax = require('postcss-scss');
 var writeFile = require('write');
 var rename = require("gulp-rename");
 var concat = require('gulp-concat');
@@ -14,7 +11,14 @@ var settings = require('../config/settings.json');
 var contents = require('../help/contents.js');
 var replace = require('gulp-replace');
 var gap = require('gulp-append-prepend');
-var gutil = require('gulp-util');
+var autoprefixer = require('gulp-autoprefixer');
+
+// кастомный чейнинг gulp плагинов
+var scssPipeline = require('../pipelines/scss.js');
+var chain = require('gulp-chain');
+var scssStream = chain(function(stream) {
+	return scssPipeline(stream);
+});
 
 var styles = [];
 var scripts = [];
@@ -31,24 +35,12 @@ gulp.task('deploy:components', ['deploy:components:styles', 'deploy:components:s
 
 
 gulp.task('deploy:components:styles', function (cb) {
-  var plugins = [
-      autoprefixer({
-          browsers: ['last 20 versions'],
-          cascade: false
-      })
-  ];
-
   var isConcat = settings.build.css.theme.concat;
   var styles = paths.components.styles;
 
   if (isConcat) {
     gulp.src(styles)
-      .pipe(postcss({
-        plugins: plugins,
-        options: { syntax: syntax }
-      }).on('error',  function (err) {
-        gutil.log(err.message)
-      }))
+      .pipe(scssStream())
       .pipe(concat('theme.scss'))
       .pipe(gap.prependText(variablesInclude))
       .pipe(gulp.dest(paths.theme.media))

@@ -2,9 +2,6 @@ var gulp = require('gulp');
 var path = require('path');
 var _ = require('lodash');
 var fs = require('fs');
-var autoprefixer = require('gulp-autoprefixer');
-var postcss = require('gulp-postcss');
-var syntax = require('postcss-scss');
 var watch = require('gulp-watch');
 var concat = require('gulp-concat');
 var rename = require("gulp-rename");
@@ -23,6 +20,17 @@ var variablesInclude = '';
 if (settings.styles === 'scss') {
   variablesInclude = contents.getVariables();
 }
+
+// кастомный чейнинг gulp плагинов
+var scssPipeline = require('../pipelines/scss.js');
+var chain = require('gulp-chain');
+var scssStream = chain(function(stream) {
+	return scssPipeline(stream);
+});
+var imagePipeline = require('../pipelines/image.js');
+var imageStream = chain(function(stream) {
+	return imagePipeline(stream);
+});
 
 // Insales Uploader
 var InsalesUploader = require('insales-uploader');
@@ -47,12 +55,7 @@ gulp.task('theme:watch:fonts', function () {
 });
 
 gulp.task('theme:watch:components', function () {
-    var plugins = [
-        autoprefixer({
-            browsers: ['last 20 versions'],
-            cascade: false
-        }),
-    ];
+
     var isConcatStyles = settings.build.css.theme.concat;
     var isConcatScripts = settings.build.js.theme.concat;
     var styles = paths.components.styles;
@@ -60,24 +63,14 @@ gulp.task('theme:watch:components', function () {
     if (isConcatStyles) {
       watch(styles, function () {
         gulp.src(styles)
-          .pipe(postcss({
-            plugins: plugins,
-            options: { syntax: syntax }
-          }).on('error',  function (err) {
-            gutil.log(err.message)
-          }))
+          .pipe(scssStream())
           .pipe(concat('theme.scss'))
           .pipe(gap.prependText(variablesInclude))
           .pipe(gulp.dest(paths.theme.media))
       })
     }else{
       watch(styles, { ignoreInitial: true })
-        .pipe(postcss({
-          plugins: plugins,
-          options: { syntax: syntax }
-        }).on('error',  function (err) {
-          gutil.log(err.message)
-        }))
+        .pipe(scssStream())
         .pipe(rename(function (_path) {
           _path.dirname = "";
         }))
@@ -107,13 +100,6 @@ gulp.task('theme:watch:components', function () {
 });
 
 gulp.task('theme:watch:layouts', function () {
-  var plugins = [
-      autoprefixer({
-          browsers: ['last 20 versions'],
-          cascade: false
-      }),
-  ];
-
   var isConcatStyles = settings.build.css.layouts.concat;
   var isConcatScripts = settings.build.js.layouts.concat;
   var styles = paths.layouts.styles;
@@ -121,27 +107,14 @@ gulp.task('theme:watch:layouts', function () {
   if (isConcatStyles) {
     watch(styles, function () {
       gulp.src(styles)
-        .on('error', function (error) {
-          console.log('error1');
-        })
-        .pipe(postcss({
-          plugins: plugins,
-          options: { syntax: syntax }
-        }).on('error',  function (err) {
-          gutil.log(err.message)
-        }))
+        .pipe(scssStream())
         .pipe(concat('layouts.scss'))
         .pipe(gap.prependText(variablesInclude))
         .pipe(gulp.dest(paths.theme.media))
     })
   }else{
     watch(styles, { ignoreInitial: true })
-        .pipe(postcss({
-          plugins: plugins,
-          options: { syntax: syntax }
-        }).on('error',  function (err) {
-          gutil.log(err.message)
-        }))
+        .pipe(scssStream())
         .pipe(rename(function (_path) {
           _path.dirname = "";
         }))
@@ -228,17 +201,11 @@ gulp.task('theme:watch:media', function () {
         .pipe(rename(function (_path) {
           _path.dirname = "";
         }))
-        .pipe(gulpif(settings.imageMin, image()))
+        .pipe(imageStream())
         .pipe(gulp.dest(paths.theme.media));
 });
 
 gulp.task('theme:watch:bundles:css', function () {
-  var plugins = [
-      autoprefixer({
-          browsers: ['last 20 versions'],
-          cascade: false
-      }),
-  ];
 
   var _css = []
   _css.push( path.normalize( paths.bundles.css + '/*/*.*css' ) );
@@ -246,14 +213,8 @@ gulp.task('theme:watch:bundles:css', function () {
   return watch(_css, function (vinyl) {
     var _bundlePath = path.normalize( vinyl.dirname + '/*.*css' );
     var _bundleName = _.last( _.split(vinyl.dirname, path.sep) ) + '.scss';
-
     gulp.src(_bundlePath)
-      .pipe(postcss({
-        plugins: plugins,
-        options: { syntax: syntax }
-      }).on('error',  function (err) {
-        gutil.log(err.message)
-      }))
+      .pipe(scssStream())
       .pipe(concat(_bundleName))
       .pipe(gap.prependText(variablesInclude))
       .pipe(gulp.dest(paths.theme.media))
