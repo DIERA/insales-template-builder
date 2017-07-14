@@ -1,4 +1,6 @@
-/// функция возвращает преобразованную переменную
+@import "settings";
+
+// функция возвращает преобразованную переменную
 @function settings($key) {
   @if map-has-key($settings, $key) {
     @return _color(#{ map-get($settings, $key) });

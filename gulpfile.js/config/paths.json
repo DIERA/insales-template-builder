@@ -16,7 +16,7 @@
     "media": ["!./project/plugins/*/*/*.js", "!./project/plugins/*/*/*.*css", "./project/plugins/*/*/*.*"]
   },
   "config": {
-    "configs": "./project/config/*.json"
+    "configs": "./project/config/*.*"
   },
   "media": {
     "paths": "./project/media/*/*.*"

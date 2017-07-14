@@ -3,11 +3,11 @@
 // Шрифты
 $font-family-primary: sans-serif;
 $font-family-second: sans-serif;
-$font-size-primary: 16px;
+$font-size-primary: settings(font_size_primary);
 
 // Colors
 $color-background-primary: #fff;
-$color-text-primary: #444444;
+$color-text-primary: settings(color_text_secondary);
 $color-text-gray: #555555;
 $color-link-primary: #1565c0;
 $color-link-primary-hover: #2196f3;
