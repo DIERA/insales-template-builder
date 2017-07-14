@@ -1,3 +1,4 @@
+#= require jquery.cookie
 #= require plugin.collapse
 #= require plugin.validateForm
 #= require feedback
